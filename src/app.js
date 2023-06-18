@@ -6,7 +6,8 @@ import {
   osInfo,
   compression,
 } from './utils/index.js';
-import { MESSAGE } from './const.js';
+import { parseParams } from './helpers.js';
+import { MESSAGE } from './constants.js';
 
 export class App {
   constructor(homeDir, params) {
@@ -30,6 +31,9 @@ export class App {
   };
 
   _validate = async (operation, args) => {
+    console.log(
+      `_validate: args.length: ${args.length}, operation: ${operation}, args[0]: ${args[0]}, args[1]: ${args[1]}, `
+    );
     switch (operation.toLowerCase()) {
       case 'up':
       case 'ls':
@@ -52,17 +56,17 @@ export class App {
       case 'cp':
       case 'compress':
       case 'decompress':
-        if (args[0] && args[1] && args.length === 2) {
+        if (args[0] && args[1]) {
           return true;
         } else return false;
 
       case 'add':
-        if (args[0] && isPathToFile(args[0]) && args.length === 1) {
+        if (args[0] && args.length === 1) {
           return true;
         } else return false;
 
       case 'rn':
-        if (args[0] && args[1] && isPathToFile(args[1]) && args.length === 1) {
+        if (args[0] && args[1]) {
           return true;
         } else return false;
 
@@ -86,7 +90,7 @@ export class App {
         break;
 
       case 'ls':
-        navigation.listFilesAndFolders();
+        navigation.listDirectoryContents(this._currentPath);
         break;
 
       case 'cat':
@@ -175,9 +179,10 @@ export class App {
 
     while (true) {
       const prompt = await rl.question(
-        `You are currently in ${this._currentPath}\n`
+        `You are currently in ${this._currentPath}\nPlease enter command:\n`
       );
-      const [operation, ...args] = prompt.trim().split(' ');
+      const [operation, ...args] = parseParams(prompt);
+      console.log(`parseParams: operation: ${operation}, args: ${args}`);
       if (await this._validate(operation, args)) {
         try {
           await this._processCommand(operation, args);
