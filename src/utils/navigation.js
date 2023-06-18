@@ -1,15 +1,12 @@
-import path from 'path';
 import { readdir } from 'node:fs/promises';
-import { chkIfDirExists } from '../helpers.js';
+import { chkIfDirExists, resolvePath } from '../helpers.js';
 
 export const goUp = async (currentPath) => {
-  return path.resolve(currentPath, '..');
+  return resolvePath(currentPath, '..');
 };
 
 export const changeDirectory = async (currentPath, pathTo) => {
-  const newPath = path.isAbsolute(path.normalize(pathTo))
-    ? pathTo
-    : path.join(currentPath, pathTo);
+  const newPath = resolvePath(currentPath, pathTo);
   await chkIfDirExists(newPath);
   return newPath;
 };

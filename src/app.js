@@ -90,31 +90,31 @@ export class App {
         break;
 
       case 'ls':
-        navigation.listDirectoryContents(this._currentPath);
+        await navigation.listDirectoryContents(this._currentPath);
         break;
 
       case 'cat':
-        await fileOperations.readFile(args[0]);
+        await fileOperations.readFile(this._currentPath, args[0]);
         break;
 
       case 'add':
-        fileOperations.createFile(args[0]);
+        await fileOperations.createFile(this._currentPath, args[0]);
         break;
 
       case 'rn':
-        fileOperations.renameFile(args[0], args[1]);
+        await fileOperations.renameFile(this._currentPath, args[0], args[1]);
         break;
 
       case 'cp':
-        await fileOperations.copyFile(args[0], args[1]);
+        await fileOperations.copyFile(this._currentPath, args[0], args[1]);
         break;
 
       case 'mv':
-        await fileOperations.moveFile(args[0], args[1]);
+        await fileOperations.moveFile(this._currentPath, args[0], args[1]);
         break;
 
       case 'rm':
-        fileOperations.deleteFile(args[0]);
+        await fileOperations.deleteFile(this._currentPath, args[0]);
         break;
 
       case 'os':
@@ -122,20 +122,19 @@ export class App {
         break;
 
       case 'hash':
-        await hash.calculateHash(args[0]);
+        await hash.calculateHash(this._currentPath, args[0]);
         break;
 
       case 'compress':
-        await compression.compressFile(args[0], args[1]);
+        await compression.compressFile(this._currentPath, args[0], args[1]);
         break;
 
       case 'decompress':
-        await compression.decompressFile(args[0], args[1]);
+        await compression.decompressFile(this._currentPath, args[0], args[1]);
         break;
 
       case '.exit':
         process.exit();
-        break;
 
       default:
         console.log(MESSAGE.invalidInput);
@@ -146,23 +145,23 @@ export class App {
   _processOSCommand = async (args) => {
     switch (args[0].toLowerCase()) {
       case '--eol':
-        osInfo.getEOL();
+        await osInfo.getEOL();
         break;
 
       case '--cpus':
-        osInfo.getCPUsInfo();
+        await osInfo.getCPUsInfo();
         break;
 
       case '--homedir':
-        osInfo.getHomeDirectory();
+        await osInfo.getHomeDirectory();
         break;
 
       case '--username':
-        osInfo.getCurrentUserName();
+        await osInfo.getCurrentUserName();
         break;
 
       case '--architecture':
-        osInfo.getCPUArchitecture();
+        await osInfo.getCPUArchitecture();
         break;
 
       default:
