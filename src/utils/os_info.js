@@ -1,23 +1,26 @@
-const getEOL = () => {
-  // TODO: Implement the logic to get the system's end-of-line character
+import os from 'node:os';
+
+export const getEOL = async () => {
+  console.log('EOL:', JSON.stringify(os.EOL));
 };
 
-// Get host machine CPUs info
-const getCPUsInfo = () => {
-  // TODO: Implement the logic to get host machine CPUs info
+export const getCPUsInfo = async () => {
+  const cpu = os.cpus().map((items) => ({
+    Model: items.model.trim(),
+    Rate: `${items.speed / 1000} GHz`,
+  }));
+  console.log('Overall amount of CPUS:', cpu.length);
+  console.table(cpu);
 };
 
-// Get the home directory
-const getHomeDirectory = () => {
-  // TODO: Implement the logic to get the home directory
+export const getHomeDirectory = async () => {
+  console.log('Home directory:', os.homedir());
 };
 
-// Get the current system user name
-const getCurrentUserName = () => {
-  // TODO: Implement the logic to get the current system user name
+export const getCurrentUserName = async () => {
+  console.log('System user name:', os.userInfo().username);
 };
 
-// Get the CPU architecture for which Node.js binary has compiled
-const getCPUArchitecture = () => {
-  // TODO: Implement the logic to get the CPU architecture
+export const getCPUArchitecture = async () => {
+  console.log('CPU architecture:', os.arch());
 };

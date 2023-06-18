@@ -118,7 +118,7 @@ export class App {
         break;
 
       case 'os':
-        await _processOSCommand(args);
+        await this._processOSCommand(args);
         break;
 
       case 'hash':
