@@ -31,9 +31,6 @@ export class App {
   };
 
   _validate = async (operation, args) => {
-    console.log(
-      `_validate: args.length: ${args.length}, operation: ${operation}, args[0]: ${args[0]}, args[1]: ${args[1]}, `
-    );
     switch (operation.toLowerCase()) {
       case 'up':
       case 'ls':
@@ -67,7 +64,6 @@ export class App {
   };
 
   _processCommand = async (operation, args) => {
-    console.log(`_processCommand: operation: ${operation}, args: ${args}`);
     switch (operation.toLowerCase()) {
       case 'up':
         this._currentPath = await navigation.goUp(this._currentPath);
@@ -172,12 +168,10 @@ export class App {
         `You are currently in ${this._currentPath}\nPlease enter command:\n`
       );
       const [operation, ...args] = parseParams(prompt);
-      console.log(`parseParams: operation: ${operation}, args: ${args}`);
       if (await this._validate(operation, args)) {
         try {
           await this._processCommand(operation, args);
         } catch (err) {
-          console.log(err);
           console.log(MESSAGE.operationFailed);
         }
       } else {

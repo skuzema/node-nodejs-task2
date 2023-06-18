@@ -11,7 +11,6 @@ export const resolvePath = (currentPath, pathTo) => {
   const newPath = path.isAbsolute(path.normalize(pathTo))
     ? pathTo
     : path.join(currentPath, pathTo);
-  console.log('** helpers, newPath:', newPath);
   return newPath;
 };
 
