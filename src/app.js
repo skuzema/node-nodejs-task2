@@ -47,7 +47,7 @@ export class App {
       case 'rm':
       case 'os':
       case 'hash':
-      case 'cat':
+      case 'add':
         if (args[0] && args.length === 1) {
           return true;
         } else return false;
@@ -56,17 +56,8 @@ export class App {
       case 'cp':
       case 'compress':
       case 'decompress':
-        if (args[0] && args[1]) {
-          return true;
-        } else return false;
-
-      case 'add':
-        if (args[0] && args.length === 1) {
-          return true;
-        } else return false;
-
       case 'rn':
-        if (args[0] && args[1]) {
+        if (args[0] && args[1] && args.length === 2) {
           return true;
         } else return false;
 
