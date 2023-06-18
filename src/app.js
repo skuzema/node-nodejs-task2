@@ -1,5 +1,12 @@
-import path from 'path';
 import { createInterface } from 'readline/promises';
+import {
+  fileOperations,
+  hash,
+  navigation,
+  osInfo,
+  compression,
+} from './utils/index.js';
+import { MESSAGE } from './const.js';
 
 export class App {
   constructor(homeDir, params) {
@@ -14,10 +21,6 @@ export class App {
       : userNameParam.split('=')[1];
   }
 
-  _resolvePath(p) {
-    return path.resolve(this._currentPath, p);
-  }
-
   greet = () => {
     console.log(`Welcome to the File Manager, ${this._user}!`);
   };
@@ -26,16 +29,60 @@ export class App {
     console.log(`Thank you for using File Manager, ${this._user}, goodbye!`);
   };
 
-  _processCommand = async (command) => {
-    const [operation, ...args] = command.split(' ');
-
+  _validate = async (operation, args) => {
     switch (operation.toLowerCase()) {
       case 'up':
-        navigation.goUp();
+      case 'ls':
+      case '.exit':
+        if (args.length > 0) {
+          return false;
+        } else return true;
+
+      case 'cd':
+      case 'cat':
+      case 'rm':
+      case 'os':
+      case 'hash':
+      case 'cat':
+        if (args[0] && args.length === 1) {
+          return true;
+        } else return false;
+
+      case 'mv':
+      case 'cp':
+      case 'compress':
+      case 'decompress':
+        if (args[0] && args[1] && args.length === 2) {
+          return true;
+        } else return false;
+
+      case 'add':
+        if (args[0] && isPathToFile(args[0]) && args.length === 1) {
+          return true;
+        } else return false;
+
+      case 'rn':
+        if (args[0] && args[1] && isPathToFile(args[1]) && args.length === 1) {
+          return true;
+        } else return false;
+
+      default:
+        return false;
+    }
+  };
+
+  _processCommand = async (operation, args) => {
+    console.log(`_processCommand: operation: ${operation}, args: ${args}`);
+    switch (operation.toLowerCase()) {
+      case 'up':
+        this._currentPath = await navigation.goUp(this._currentPath);
         break;
 
       case 'cd':
-        navigation.goToDirectory(args[0]);
+        this._currentPath = await navigation.changeDirectory(
+          this._currentPath,
+          args[0]
+        );
         break;
 
       case 'ls':
@@ -82,8 +129,12 @@ export class App {
         await compression.decompressFile(args[0], args[1]);
         break;
 
+      case '.exit':
+        process.exit();
+        break;
+
       default:
-        console.log('Invalid command.');
+        console.log(MESSAGE.invalidInput);
         break;
     }
   };
@@ -111,30 +162,32 @@ export class App {
         break;
 
       default:
-        console.log('Invalid OS command.');
+        console.log(MESSAGE.invalidInput);
         break;
     }
   };
 
-  start = () => {
+  async start() {
     const rl = createInterface({
       input: process.stdin,
       output: process.stdout,
     });
 
-    const prompt = () => {
-      rl.question(`You are currently in ${this._currentPath}\n`, (command) => {
-        _processCommand(command.trim().toLowerCase())
-          .then(() => {
-            prompt();
-          })
-          .catch((error) => {
-            console.error(error.message);
-            prompt();
-          });
-      });
-    };
-
-    prompt();
-  };
+    while (true) {
+      const prompt = await rl.question(
+        `You are currently in ${this._currentPath}\n`
+      );
+      const [operation, ...args] = prompt.trim().split(' ');
+      if (await this._validate(operation, args)) {
+        try {
+          await this._processCommand(operation, args);
+        } catch (err) {
+          console.log(err);
+          console.log(MESSAGE.operationFailed);
+        }
+      } else {
+        console.log(MESSAGE.invalidInput);
+      }
+    }
+  }
 }
