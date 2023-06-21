@@ -1,12 +1,7 @@
 import path from 'node:path';
-import {
-  readFile as read,
-  writeFile,
-  rename,
-  copyFile as copy,
-  mkdir,
-  rm,
-} from 'fs/promises';
+import { readFile as read, writeFile, rename, mkdir, rm } from 'fs/promises';
+import { createReadStream, createWriteStream } from 'fs';
+import { pipeline } from 'stream/promises';
 import { resolvePath, chkIfDirExists, chkIfFileExists } from '../helpers.js';
 
 export const readFile = async (currentPath, filePath) => {
@@ -38,7 +33,9 @@ export const copyFile = async (currentPath, filePath, destinationPath) => {
   if (!(await chkIfDirExists(destPath, false))) {
     await mkdir(destPath);
   }
-  await copy(sourceFilePath, destFilePath);
+  const readStream = createReadStream(sourceFilePath);
+  const writeStream = createWriteStream(destFilePath);
+  await pipeline(readStream, writeStream);
 };
 
 export const moveFile = async (currentPath, filePath, destinationPath) => {
