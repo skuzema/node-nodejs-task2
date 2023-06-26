@@ -1,10 +1,12 @@
 import { createInterface } from 'readline/promises';
 import {
   fileOperations,
+  file2Operations,
   hash,
   navigation,
   osInfo,
   compression,
+  decompression
 } from './utils/index.js';
 import { parseParams } from './helpers.js';
 import { MESSAGE } from './constants.js';
@@ -89,19 +91,19 @@ export class App {
         break;
 
       case 'rn':
-        await fileOperations.renameFile(this._currentPath, args[0], args[1]);
+        await file2Operations.renameFile(this._currentPath, args[0], args[1]);
         break;
 
       case 'cp':
-        await fileOperations.copyFile(this._currentPath, args[0], args[1]);
+        await file2Operations.copyFile(this._currentPath, args[0], args[1]);
         break;
 
       case 'mv':
-        await fileOperations.moveFile(this._currentPath, args[0], args[1]);
+        await file2Operations.moveFile(this._currentPath, args[0], args[1]);
         break;
 
       case 'rm':
-        await fileOperations.deleteFile(this._currentPath, args[0]);
+        await file2Operations.deleteFile(this._currentPath, args[0]);
         break;
 
       case 'os':
@@ -117,7 +119,7 @@ export class App {
         break;
 
       case 'decompress':
-        await compression.decompressFile(this._currentPath, args[0], args[1]);
+        await decompression.decompressFile(this._currentPath, args[0], args[1]);
         break;
 
       case '.exit':

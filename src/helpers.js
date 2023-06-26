@@ -15,27 +15,17 @@ export const resolvePath = (currentPath, pathTo) => {
 };
 
 export const chkIfDirExists = async (path, throwError = true) => {
-  try {
-    const result = (await stat(path)).isDirectory();
-    return result;
-  } catch (err) {
-    if (throwError) {
-      throw new Error();
-    } else {
-      return false;
-    }
+  const result = (await stat(path)).isDirectory();
+  if (!result && throwError) {
+    throw new Error();
   }
+  return result;
 };
 
 export const chkIfFileExists = async (path, throwError = true) => {
-  try {
-    const result = (await stat(path)).isFile();
-    return result;
-  } catch (err) {
-    if (throwError) {
-      throw new Error();
-    } else {
-      return false;
-    }
+  const result = (await stat(path)).isFile();
+  if (!result && throwError) {
+    throw new Error();
   }
+  return result;
 };
