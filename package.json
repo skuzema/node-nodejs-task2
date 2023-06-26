@@ -1,0 +1,22 @@
+{
+  "name": "fm",
+  "version": "1.0.0",
+  "description": "Task #2: File Manager",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:test": "node src/index.js --username=TestDeveloper",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skuzema/node-nodejs-task2.git"
+  },
+  "author": "Sergejs Kuzema",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skuzema/node-nodejs-task2/issues"
+  },
+  "homepage": "https://github.com/skuzema/node-nodejs-task2#readme"
+}
